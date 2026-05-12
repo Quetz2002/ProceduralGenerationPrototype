@@ -5,6 +5,9 @@ public class Planet : MonoBehaviour
     [Range(2,256)]
     public int resolution = 10;
 
+    public ShapeSettings shapeSettings;
+    public ColourSettings colourSettings;
+
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
@@ -40,11 +43,25 @@ public class Planet : MonoBehaviour
         }
     }
 
+    public void OnColourSettingsUpdated()
+    {
+        Initiaze();
+        GenerateColours();
+    }
+
     void GenerateMesh()
     {
         foreach (TerrainFace face in terrainFaces)
         {
             face.ConstructMesh();
+        }
+    }
+
+    void GenerateColours()
+    {
+        foreach (MeshFilter meshFilter in meshFilters)
+        {
+            meshFilter.GetComponent<MeshRenderer>().sharedMaterial.color = colourSettings.planetColor;
         }
     }
 }
