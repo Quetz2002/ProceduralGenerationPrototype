@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58848fc4a561a148930f2fd1104d3d8, type: 3}
   m_Name: Shape
   m_EditorClassIdentifier: Assembly-CSharp::ShapeSettings
-  planetRadius: 2
+  planetRadius: 4.39

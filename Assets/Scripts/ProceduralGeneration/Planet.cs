@@ -4,9 +4,15 @@ public class Planet : MonoBehaviour
 {
     [Range(2,256)]
     public int resolution = 10;
+    public bool autoUpdate = true;
 
     public ShapeSettings shapeSettings;
     public ColourSettings colourSettings;
+
+    [HideInInspector]
+    public bool shapeSettingsFoldout;
+    [HideInInspector]
+    public bool colourSettingsFoldout;
 
     ShapeGenerator shapeGenerator;
 
@@ -14,10 +20,7 @@ public class Planet : MonoBehaviour
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
-    private void OnValidate()
-    {
-       GeneratePlanet();
-    }
+   
 
     void Initiaze()
     {
@@ -37,12 +40,13 @@ public class Planet : MonoBehaviour
             {
                 GameObject meshObj = new GameObject("mesh");
                 meshObj.transform.parent = transform;
-                meshObj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
+                //Aqui se setea el material del mesh. junto con el shader
+                meshObj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
                 meshFilters[i] = meshObj.AddComponent<MeshFilter>();
                 meshFilters[i].sharedMesh = new Mesh();
-
-                terrainFaces[i] = new TerrainFace(shapeGenerator,meshFilters[i].sharedMesh, resolution, directions[i]);
             }
+            // Aqui se llama a la clase TerrainFace para construir el mesh
+            terrainFaces[i] = new TerrainFace(shapeGenerator,meshFilters[i].sharedMesh, resolution, directions[i]);
         }
     }
 
@@ -53,10 +57,22 @@ public class Planet : MonoBehaviour
         GenerateColours();
     }
 
+    public void OnShapeSettingsUpdated()
+    {
+        if (autoUpdate)
+        {
+            Initiaze();
+            GenerateMesh();
+        }
+    }
+
     public void OnColourSettingsUpdated()
     {
-        Initiaze();
-        GenerateColours();
+        if (autoUpdate)
+        {
+            Initiaze();
+            GenerateColours();
+        }
     }
 
     void GenerateMesh()
